@@ -25,8 +25,11 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     .app-content {
       flex: 1 1 auto;
+      position: relative;
+      overflow: hidden;
     }
     .bottom {
       flex: 0 0 50px;

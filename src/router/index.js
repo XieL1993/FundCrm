@@ -13,14 +13,9 @@ export default new Router({
       component: Login
     },
     {
-      path: '/mainIndex',
-      name: '首页',
-      component: MainLayout
-    },
-    {
       path: '/',
       component: MainLayout,
-      redirect: '/mainIndex',
+      redirect: '/home',
       children: [{
         name: '首页',
         path: '/home',
