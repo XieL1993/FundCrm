@@ -1,31 +1,65 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '../page/system/login'
-import MainLayout from '../page/mainLayout'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
+      name: '登录',
       path: '/login',
-      name: 'Login',
-      component: Login
+      component: resolve => {
+        import('../page/system/login').then(module => {
+          resolve(module)
+        })
+      }
     },
     {
       path: '/',
-      component: MainLayout,
+      component: resolve => {
+        import('../page/mainLayout').then(module => {
+          resolve(module)
+        })
+      },
       redirect: '/home',
-      children: [{
-        name: '首页',
-        path: '/home',
-        component: resolve => {
-          import('../page/home/home').then(module => {
-            resolve(module)
-          })
+      children: [
+        {
+          name: '首页',
+          path: '/home',
+          component: resolve => {
+            import('../page/home/home').then(module => {
+              resolve(module)
+            })
+          }
         },
-        hidden: true
-      }]
+        {
+          name: '股票',
+          path: '/stock',
+          component: resolve => {
+            import('../page/stock/stock').then(module => {
+              resolve(module)
+            })
+          }
+        },
+        {
+          name: '社区',
+          path: '/community',
+          component: resolve => {
+            import('../page/community/community').then(module => {
+              resolve(module)
+            })
+          }
+        },
+        {
+          name: '我的',
+          path: '/me',
+          component: resolve => {
+            import('../page/me/me').then(module => {
+              resolve(module)
+            })
+          }
+        }
+      ]
     }
   ]
 })

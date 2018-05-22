@@ -1,20 +1,9 @@
 <template>
   <div class="tab">
-    <div class="tab-item" :class="{active:currentIndex===0}" @click="currentIndex=0">
-      <svg-icon :icon-class="getIconClass(0)" class="home"></svg-icon>
-      <span class="tab-link">首页</span>
-    </div>
-    <div class="tab-item" :class="{active:currentIndex===1}" @click="currentIndex=1">
-      <svg-icon :icon-class="getIconClass(1)" class="fund"></svg-icon>
-      <span class="tab-link">股票</span>
-    </div>
-    <div class="tab-item" :class="{active:currentIndex===2}" @click="currentIndex=2">
-      <svg-icon :icon-class="getIconClass(2)"></svg-icon>
-      <span class="tab-link">社区</span>
-    </div>
-    <div class="tab-item" :class="{active:currentIndex===3}" @click="currentIndex=3">
-      <svg-icon :icon-class="getIconClass(3)"></svg-icon>
-      <span class="tab-link">我的</span>
+    <div class="tab-item" v-for="(item,index) in tabs" :key="index" :class="{active:currentIndex===index}"
+         @click="changeTab(item,index)">
+      <svg-icon :icon-class="currentIndex===index?item.icon+'_on':item.icon" :class="item.icon"></svg-icon>
+      <span class="tab-link">{{item.name}}</span>
     </div>
   </div>
 </template>
@@ -22,13 +11,37 @@
   export default {
     data() {
       return {
-        names: ['home', 'fund', 'message', 'me'],
+        tabs: [
+          {
+            name: '首页',
+            icon: 'home',
+            path: '/home'
+          },
+          {
+            name: '股票',
+            icon: 'stock',
+            path: '/stock'
+          },
+          {
+            name: '社区',
+            icon: 'community',
+            path: '/community'
+          },
+          {
+            name: '我的',
+            icon: 'me',
+            path: '/me'
+          }
+        ],
         currentIndex: 0
       }
     },
     methods: {
-      getIconClass(index) {
-        return this.currentIndex === index ? this.names[index] + '_on' : this.names[index]
+      changeTab(item, index) {
+        this.currentIndex = index
+        if (this.$router.path !== item.path) {
+          this.$router.push(item.path)
+        }
       }
     }
   }
@@ -58,7 +71,7 @@
         &.home {
           padding: 2px; // 这个图片有点异常，同等font-size比其他图片略大，暂用padding处理
         }
-        &.fund {
+        &.stock {
           padding: 1px;
         }
       }
