@@ -14,12 +14,12 @@
         <svg-icon icon-class="password"></svg-icon>
         <input type="text" class="password" placeholder="请输入密码">
       </div>
-      <mt-button type="primary" @click="login">登录</mt-button>
+      <van-button type="primary" bottom-action @click.native="login">登录</van-button>
     </div>
   </div>
 </template>
 <script>
-  import { Indicator } from 'mint-ui'
+  import { Toast } from 'vant'
 
   export default {
     data() {
@@ -30,12 +30,9 @@
     },
     methods: {
       login() {
-        Indicator.open({
-          text: '登录中...',
-          spinnerType: 'fading-circle'
-        })
+        Toast.loading('登录中...')
         setTimeout(() => {
-          Indicator.close()
+          Toast.clear()
           this.$router.push('/home')
         },
         2000)
@@ -112,10 +109,11 @@
           }
         }
       }
-      .mint-button {
+      .van-button {
         width: 100%;
         height: 45px;
         margin-top: 10px;
+        border-radius: 3px;
       }
     }
   }

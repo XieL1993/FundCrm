@@ -10,7 +10,7 @@
     <div class="main">
       <div class="quick-entry">
         <div class="entry-item">
-          <svg-icon icon-class="yuEBao"></svg-icon>
+          <svg-icon icon-class="yuEbao"></svg-icon>
           余额宝
         </div>
         <div class="entry-item">
@@ -286,7 +286,7 @@
           padding: 0 15px;
           align-items: center;
           &:active {
-            background: $bg-gray;
+            background: #e8e8e8;
           }
           .left {
             flex: 0 0 auto;
@@ -337,7 +337,7 @@
           padding: 0 15px;
           align-items: center;
           &:active {
-            background: $bg-gray;
+            background: #e8e8e8;
           }
           .left {
             flex: 0 0 auto;

@@ -6,19 +6,33 @@
       <svg-icon :icon-class="night?'day':'night'" class="night" @click.native="night=!night"></svg-icon>
       <svg-icon icon-class="menu" class="menu"></svg-icon>
     </div>
+    <van-tabs v-model="active" swipeable>
+      <van-tab title="自选">
+        <self-selected></self-selected>
+      </van-tab>
+      <van-tab title="沪深">沪深</van-tab>
+      <van-tab title="港股">港股</van-tab>
+      <van-tab title="美股">美股</van-tab>
+    </van-tabs>
     <div class="main" :class="{'night':night}"></div>
   </div>
 </template>
 <script>
+  import SelfSelected from './self-selected'
+
   export default {
     data() {
       return {
-        night: false
+        night: false,
+        active: '沪深'
       }
+    },
+    components: {
+      SelfSelected
     }
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss">
   @import "../../common/styles/variables";
 
   #stock {
@@ -63,11 +77,21 @@
         }
       }
     }
-    .main {
-      min-height: 100%;
-      transition: all 0.2s ease-in;
-      &.night {
-        background: $bg-night-content;
+    .van-tabs {
+      flex: 1 1 auto;
+      height: 100%;
+      overflow: hidden;
+      .van-tabs__line {
+        background-color: $base-color;
+      }
+      .van-tab--active {
+        color: $base-color;
+      }
+      .van-tabs__content {
+        height: 100%;
+        .van-tab__pane {
+          height: 100%;
+        }
       }
     }
   }

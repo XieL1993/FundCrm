@@ -5,16 +5,9 @@ import App from './App'
 import router from './router'
 import './common/icons'
 import './common/styles/index.scss'
-import { Button } from 'mint-ui'
+import { Button, Tab, Tabs, PullRefresh } from 'vant'
 
-Vue.component(Button.name, Button)
-import { Field } from 'mint-ui'
-
-Vue.component(Field.name, Field)
-import { Swipe, SwipeItem } from 'mint-ui'
-
-Vue.component(Swipe.name, Swipe)
-Vue.component(SwipeItem.name, SwipeItem)
+Vue.use(Button).use(Tab).use(Tabs).use(PullRefresh)
 
 Vue.config.productionTip = false
 
