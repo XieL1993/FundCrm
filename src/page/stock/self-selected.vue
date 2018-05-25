@@ -127,18 +127,6 @@
       display: none
     }
     .self-selected {
-      .content {
-        height: 500px;
-        &:nth-child(1) {
-          background: orange;
-        }
-        &:nth-child(2) {
-          background: palegoldenrod;
-        }
-        &:nth-child(3) {
-          background: yellowgreen;
-        }
-      }
       .fund-item {
         height: 50px;
         padding: 0 20px;

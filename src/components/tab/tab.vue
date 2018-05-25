@@ -36,10 +36,21 @@
         currentIndex: 0
       }
     },
+    mounted() {
+      if (this.$route.path.startsWith('/home')) {
+        this.currentIndex = 0
+      } else if (this.$route.path.startsWith('/stock')) {
+        this.currentIndex = 1
+      } else if (this.$route.path.startsWith('/community')) {
+        this.currentIndex = 2
+      } else if (this.$route.path.startsWith('/me')) {
+        this.currentIndex = 3
+      }
+    },
     methods: {
       changeTab(item, index) {
         this.currentIndex = index
-        if (this.$router.path !== item.path) {
+        if (this.$route.path !== item.path) {
           this.$router.push(item.path)
         }
       }

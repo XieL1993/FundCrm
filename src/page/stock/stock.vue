@@ -78,8 +78,7 @@
       }
     }
     .van-tabs {
-      flex: 1 1 auto;
-      height: 100%;
+      flex: 1;
       overflow: hidden;
       .van-tabs__line {
         background-color: $base-color;
