@@ -60,6 +60,26 @@ export default new Router({
           }
         }
       ]
+    },
+    {
+      name: '学生管理系统',
+      path: '/student',
+      component: resolve => {
+        import('../page/student/index').then(module => {
+          resolve(module)
+        })
+      },
+      children: [
+        {
+          name: '新增学生',
+          path: 'add',
+          component: resolve => {
+            import('../page/student/add').then(module => {
+              resolve(module)
+            })
+          }
+        }
+      ]
     }
   ]
 })
