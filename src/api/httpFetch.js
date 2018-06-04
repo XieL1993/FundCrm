@@ -2,7 +2,7 @@ import axios from 'axios'
 import Qs from 'qs'
 
 const httpFetch = axios.create({
-  baseURL: 'http://192.168.1.101:8080',
+  baseURL: 'http://192.168.242.80:8080',
   timeout: 15000, // request timeout
   // 请求头信息
   headers: {

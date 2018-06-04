@@ -2,7 +2,7 @@
   <div class="add-student">
     <div class="home-head">
       <svg-icon icon-class="back" class="back" @click.native="back"></svg-icon>
-      <h2 class="title">新增学生</h2>
+      <h2 class="title">{{title}}</h2>
       <span @click="fetchData">提交</span>
     </div>
     <div class="main">
@@ -51,9 +51,25 @@
 <script>
   import { Toast } from 'vant'
   import { Dialog } from 'vant'
-  import { addStudent } from '../../api/student'
+  import { addStudent, getStudentDetail } from '../../api/student'
+  import { mapActions } from 'vuex'
 
   export default {
+    created() {
+      if (this.sid) {
+        getStudentDetail(this.sid).then(res => {
+          this.dealDetail(res.data)
+        })
+      }
+    },
+    computed: {
+      sid() {
+        return this.$route.query.sid
+      },
+      title() {
+        return this.sid ? '编辑学生' : '新增学生'
+      }
+    },
     data() {
       return {
         formItems: {
@@ -81,6 +97,7 @@
       }
     },
     methods: {
+      ...mapActions(['refreshStudentList']),
       setGender(val) {
         this.formItems.gender = val.name
         this.genderShow = false
@@ -88,7 +105,6 @@
       getMinDate() {
         const date = new Date()
         date.setFullYear(1990)
-        console.log(date)
         return date
       },
       formatDate(date) {
@@ -114,22 +130,44 @@
           return
         }
         const data = Object.assign(this.formItems)
+        let method = 'add'
+        if (this.sid) {
+          data.sid = this.sid
+          method = 'update'
+        }
         if (data.gender === '男') {
           data.gender = '1'
         } else {
           data.gender = '0'
         }
-        addStudent(data).then(res => {
+        Toast.loading('提交中...')
+        addStudent(data, method).then(res => {
+          Toast.clear()
           Dialog.alert({
             title: '提示',
             message: res.msg
           }).then(() => {
+            this.refreshStudentList(true)
             this.back()
           })
         })
       },
       back() {
         this.$router.go(-1)
+      },
+      dealDetail(data) {
+        for (const key of Object.keys(this.formItems)) {
+          if (data[key]) {
+            if (key === 'gender') {
+              this.formItems.gender = data.gender === '0' ? '女' : '男'
+            } else if (key === 'birthday') {
+              this.currentDate = new Date(data.birthday)
+              this.formItems.birthday = this.formatDate(this.currentDate)
+            } else {
+              this.formItems[key] = data[key]
+            }
+          }
+        }
       }
     }
   }

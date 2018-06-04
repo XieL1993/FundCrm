@@ -5,14 +5,16 @@
       <h2 class="title">学生管理系统</h2>
       <svg-icon icon-class="add" class="add" @click.native="add"></svg-icon>
     </div>
+    <van-search placeholder="请输入学生姓名" background="#F5F5F9" @search="fetchData(true)" v-model="searchText"></van-search>
     <div class="main">
       <van-list
         v-model="loading"
         :finished="finished"
-        @load="fetchData"
+        @load="fetchData(false)"
       >
-        <div class="student-item" v-for="(item,index) in students" :key="index">
-          <span class="head-photo" :style="getColor()">{{item.sname.charAt(0)}}</span>
+        <div class="student-item" v-for="(item,index) in students" :key="index"
+             @touchstart="showDeleteButton(item)" @touchmove="clearLoop" @touchend="clearLoop" @click="edit(item)">
+          <span class="head-photo" :style="getColor(index)">{{item.sname.charAt(0)}}</span>
           <div class="content">
             <div class="top">
               <span class="name">{{item.sname}}</span>
@@ -26,28 +28,80 @@
       </van-list>
     </div>
     <router-view></router-view>
+    <list-dialog :data="dialogData" v-model="isShowDialog" :title="currentItem.sname"></list-dialog>
   </div>
 </template>
 <script>
-  import { getStudentList } from '../../api/student'
+  import { Toast } from 'vant'
+  import { getStudentList, deleteStudent } from '../../api/student'
+  import { mapGetters, mapActions } from 'vuex'
+  import ListDialog from '../../components/list-dialog'
 
   export default {
     data() {
       return {
+        searchText: '',
+        currentPage: 0,
+        pageSize: 10,
         students: [],
-        finished: true,
+        finished: false,
         loading: false,
-        colors: ['#5EC9F6', '#F65E8D', '#A1887F', '#78C06E', '#F6BF26', '#0094ff', '#5C6BC0', '#A1887F', '#FF8E6B', '#C5CB63']
+        isShowDialog: false,
+        currentItem: { sname: '' },
+        dialogData: [
+          {
+            label: '从学生管理系统中删除',
+            click: this.deleteStudent
+          }
+        ],
+        colors: ['#5EC9F6', '#F65E8D', '#A1887F', '#78C06E', '#F6BF26', '#5C6BC0', '#FF8E6B']
       }
     },
-    created() {
-      this.fetchData()
+    computed: {
+      ...mapGetters(['studentList'])
+    },
+    watch: {
+      studentList(val) {
+        if (val) {
+          this.refreshStudentList(false)
+          this.fetchData(true)
+        }
+      },
+      searchText(val) {
+        if (!val) {
+          this.fetchData(true)
+        }
+      }
     },
     methods: {
-      fetchData() {
-        getStudentList().then(res => {
-          this.students = res.data
+      ...mapActions(['refreshStudentList']),
+      fetchData(isRefresh) {
+        if (isRefresh) {
+          this.currentPage = 1
+        } else {
+          this.currentPage = this.currentPage + 1
+        }
+        getStudentList(this.searchText, this.pageSize, this.currentPage).then(res => {
+          if (isRefresh) {
+            this.students = res.data.list
+          } else {
+            for (const item of res.data.list) {
+              this.students.push(item)
+            }
+          }
+          this.loading = false
+          this.finished = this.currentPage >= res.data.totalPage
         })
+      },
+      deleteStudent() {
+        if (this.currentItem && this.currentItem.sid) {
+          Toast.loading('提交中...')
+          deleteStudent(this.currentItem.sid).then(res => {
+            Toast.clear()
+            Toast({ message: res.msg, position: 'bottom' })
+            this.fetchData(true)
+          })
+        }
       },
       back() {
         this.$router.go(-1)
@@ -55,10 +109,27 @@
       add() {
         this.$router.push('/student/add')
       },
-      getColor() {
-        const background = this.colors[Math.floor(Math.random() * 10)]
+      getColor(index) {
+        const background = this.colors[index % 7]
         return { background }
+      },
+      showDeleteButton(item) {
+        clearInterval(this.Loop)
+        this.Loop = setTimeout(function() {
+          this.currentItem = item
+          this.isShowDialog = true
+        }.bind(this), 500)
+      },
+      edit(item) {
+        const query = { sid: item.sid }
+        this.$router.push({ path: '/student/add', query })
+      },
+      clearLoop() {
+        clearInterval(this.Loop)
       }
+    },
+    components: {
+      ListDialog
     }
   }
 </script>
@@ -102,11 +173,16 @@
         }
       }
     }
+    .van-search {
+      flex: 0 0 60px;
+      height: 60px;
+      padding: 10px 10px;
+    }
     .main {
       flex: 1;
       overflow: auto;
       &::-webkit-scrollbar {
-        display: none
+        /*display: none*/
       }
       .student-item {
         height: 80px;
@@ -116,6 +192,9 @@
         align-items: center;
         position: relative;
         overflow: hidden;
+        &:first-of-type {
+          margin-top: 0;
+        }
         &:active {
           background: $color-active
         }
@@ -138,6 +217,8 @@
           display: flex;
           flex-direction: column;
           justify-content: center;
+          overflow: hidden;
+          padding-right: 10px;
           .top {
             font-size: 14px;
             color: $color-normal;
