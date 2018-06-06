@@ -182,7 +182,7 @@
       flex: 1;
       overflow: auto;
       &::-webkit-scrollbar {
-        /*display: none*/
+        display: none
       }
       .student-item {
         height: 80px;

@@ -8,11 +8,11 @@
     <div class="form">
       <div class="container username_box">
         <svg-icon icon-class="account"></svg-icon>
-        <input type="text" class="username" placeholder="请输入账号">
+        <input type="text" class="username" placeholder="请输入账号" v-model="username">
       </div>
       <div class="container password_box">
         <svg-icon icon-class="password"></svg-icon>
-        <input type="text" class="password" placeholder="请输入密码">
+        <input type="text" class="password" placeholder="请输入密码" v-model="password">
       </div>
       <van-button type="primary" bottom-action @click.native="login">登录</van-button>
     </div>
@@ -20,22 +20,36 @@
 </template>
 <script>
   import { Toast } from 'vant'
+  import { login } from '../../api/user'
+  import { mapActions } from 'vuex'
 
   export default {
     data() {
       return {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123'
       }
     },
     methods: {
+      ...mapActions(['saveUserInfo']),
       login() {
+        if (!this.username) {
+          Toast({ message: '用户名不能为空', position: 'bottom' })
+          return
+        }
+        if (!this.password) {
+          Toast({ message: '密码不能为空', position: 'bottom' })
+          return
+        }
         Toast.loading('登录中...')
-        setTimeout(() => {
+        login(this.username, this.password).then(res => {
           Toast.clear()
+          this.saveUserInfo(res.data)
           this.$router.push('/home')
-        },
-        2000)
+        }).catch(error => {
+          Toast.clear()
+          Toast({ message: error.message, position: 'bottom' })
+        })
       }
     }
   }
