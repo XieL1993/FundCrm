@@ -12,7 +12,18 @@ export default new Router({
         import('../page/system/login').then(module => {
           resolve(module)
         })
-      }
+      },
+      children: [
+        {
+          name: '注册',
+          path: 'register',
+          component: resolve => {
+            import('../page/system/register.vue').then(module => {
+              resolve(module)
+            })
+          }
+        }
+      ]
     },
     {
       path: '/',
@@ -80,6 +91,15 @@ export default new Router({
           }
         }
       ]
+    },
+    {
+      name: '京东商城',
+      path: '/jd',
+      component: resolve => {
+        import('../page/jd/index').then(module => {
+          resolve(module)
+        })
+      }
     }
   ]
 })

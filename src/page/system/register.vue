@@ -1,40 +1,40 @@
 <template>
-  <div class="login">
-    <div class="background">
-    </div>
-    <div class="header">
-      <img class="head-photo">
-    </div>
-    <div class="form">
-      <div class="container username_box">
-        <svg-icon icon-class="account"></svg-icon>
-        <input type="text" class="username" placeholder="请输入账号" v-model="username">
+  <transition name="slide">
+    <div class="register">
+      <div class="background">
       </div>
-      <div class="container password_box">
-        <svg-icon icon-class="password"></svg-icon>
-        <input type="text" class="password" placeholder="请输入密码" v-model="password">
+      <div class="header">
+        <img class="head-photo">
       </div>
-      <van-button type="primary" bottom-action @click.native="login">登录</van-button>
-      <div class="register" @click="register">注册账号</div>
+      <div class="form">
+        <div class="container username_box">
+          <svg-icon icon-class="account"></svg-icon>
+          <input type="text" class="username" placeholder="请输入账号" v-model="username">
+        </div>
+        <div class="container password_box">
+          <svg-icon icon-class="password"></svg-icon>
+          <input type="text" class="password" placeholder="请输入密码" v-model="password">
+        </div>
+        <van-button type="primary" bottom-action @click.native="register">注册</van-button>
+      </div>
     </div>
-    <router-view></router-view>
-  </div>
+  </transition>
 </template>
 <script>
   import { Toast } from 'vant'
-  import { login } from '../../api/user'
+  import { register } from '../../api/user'
   import { mapActions } from 'vuex'
 
   export default {
     data() {
       return {
-        username: '郑爽',
-        password: 'love'
+        username: '',
+        password: ''
       }
     },
     methods: {
       ...mapActions(['saveUserInfo']),
-      login() {
+      register() {
         if (!this.username) {
           Toast({ message: '用户名不能为空', position: 'bottom' })
           return
@@ -43,34 +43,26 @@
           Toast({ message: '密码不能为空', position: 'bottom' })
           return
         }
-        Toast.loading('登录中...')
-        login(this.username, this.password).then(res => {
+        Toast.loading('注册中...')
+        register(this.username, this.password).then(res => {
           Toast.clear()
-          this.saveUserInfo(res.data)
-          this.$router.push('/home')
+          Toast({ message: res.msg, position: 'bottom' })
+          this.$router.back()
         }).catch(error => {
           Toast.clear()
           Toast({ message: error.message, position: 'bottom' })
         })
-      },
-      register() {
-        this.$router.push('/login/register')
       }
     }
   }
 </script>
 
 <style scoped lang="scss">
-  @keyframes rotate {
-    0% {
-      transform: rotate(0);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+  @import "../../common/styles/anim";
 
-  .login {
+  @include rotate();
+  @include slide();
+  .register {
     position: fixed;
     left: 0;
     right: 0;
@@ -85,7 +77,7 @@
       height: 100%;
       z-index: -1;
       filter: blur(20px);
-      background: url(../../common/image/bg.jpg);
+      background: url(../../common/image/bg2.jpg);
 
     }
     .header {
@@ -97,7 +89,7 @@
         padding-top: 30%;
         border: 1px solid rgba(255, 255, 255, 0.5);
         height: 0;
-        background: url(../../common/image/bg.jpg) no-repeat center center;
+        background: url(../../common/image/bg2.jpg) no-repeat center center;
         background-size: cover;
         border-radius: 50%;
         animation: rotate 6s linear infinite;
@@ -142,18 +134,6 @@
         height: 45px;
         margin-top: 10px;
         border-radius: 3px;
-      }
-      .register {
-        position: absolute;
-        left: 10px;
-        color: #ffffff;
-        font-size: 16px;
-        margin-top: 10px;
-        padding: 10px;
-        text-align: right;
-        &:active {
-          color: #409EFF;
-        }
       }
     }
   }

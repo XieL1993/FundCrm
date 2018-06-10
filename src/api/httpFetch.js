@@ -5,7 +5,7 @@ import { Dialog } from 'vant'
 import router from '../router'
 
 const httpFetch = axios.create({
-  baseURL: 'http://192.168.242.80:8080',
+  baseURL: 'http://192.168.1.101:8080',
   timeout: 15000, // request timeout
   // 请求头信息
   headers: {
@@ -23,7 +23,7 @@ const httpFetch = axios.create({
 })
 
 httpFetch.interceptors.request.use(config => {
-  const flag = /logout|login/.test(config.url)
+  const flag = /logout|login|register/.test(config.url)
   if (store.getters.token && !flag) {
     config.headers.token = store.getters.token
   }

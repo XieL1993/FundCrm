@@ -1,0 +1,20 @@
+@mixin rotate {
+  @keyframes rotate {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@mixin slide {
+  .slide-enter-active, .slide-leave-active {
+    transition: all 0.3s
+  }
+
+  .slide-enter, .slide-leave-to {
+    transform: translate(100%, 0);
+  }
+}

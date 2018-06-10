@@ -13,8 +13,8 @@
         <span>学生管理系统</span>
         <svg-icon icon-class="arrowRight"></svg-icon>
       </div>
-      <div class="entrance-item">
-        <span>待定</span>
+      <div class="entrance-item" @click="toJd">
+        <span>京东商城</span>
         <svg-icon icon-class="arrowRight"></svg-icon>
       </div>
       <div class="entrance-item">
@@ -32,6 +32,9 @@
     methods: {
       toStudent() {
         this.$router.push('/student')
+      },
+      toJd() {
+        this.$router.push('/jd')
       }
     }
   }
