@@ -99,7 +99,47 @@ export default new Router({
         import('../page/jd/index').then(module => {
           resolve(module)
         })
-      }
+      },
+      children: [
+        {
+          name: '商品详情',
+          path: 'detail/:id',
+          component: resolve => {
+            import('../page/jd/detail.vue').then(module => {
+              resolve(module)
+            })
+          }
+        },
+        {
+          name: '购物车',
+          path: 'cart',
+          component: resolve => {
+            import('../page/jd/cart.vue').then(module => {
+              resolve(module)
+            })
+          }
+        },
+        {
+          name: '我的订单',
+          path: 'order',
+          component: resolve => {
+            import('../page/jd/order.vue').then(module => {
+              resolve(module)
+            })
+          },
+          children: [
+            {
+              name: '订单详情',
+              path: 'detail/:id',
+              component: resolve => {
+                import('../page/jd/order-detail.vue').then(module => {
+                  resolve(module)
+                })
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 })

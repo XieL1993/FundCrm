@@ -3,9 +3,10 @@ import Qs from 'qs'
 import store from '../store'
 import { Dialog } from 'vant'
 import router from '../router'
+import { baseURL } from '../common/js/config'
 
 const httpFetch = axios.create({
-  baseURL: 'http://192.168.1.101:8080',
+  baseURL,
   timeout: 15000, // request timeout
   // 请求头信息
   headers: {

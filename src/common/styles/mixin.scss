@@ -3,3 +3,12 @@
   overflow: hidden;
   white-space: nowrap
 }
+
+@mixin line($line) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: $line;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}

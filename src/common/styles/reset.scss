@@ -1,9 +1,26 @@
 .van-field__control {
   height: 100%;
 }
+
 .van-cell {
   height: 100%;
 }
+
 .van-button--bottom-action.van-button--primary {
   background-color: #409EFF;
+}
+
+.van-tabs {
+  .van-tabs__line {
+    background-color: #2672FF;
+  }
+  .van-tab--active {
+    color: #2672FF;
+  }
+  .van-tabs__content {
+    height: 100%;
+    .van-tab__pane {
+      height: 100%;
+    }
+  }
 }
