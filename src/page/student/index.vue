@@ -238,7 +238,7 @@
             font-size: 14px;
             color: $color-normal;
             margin-top: 5px;
-            @include no-wrap();
+            @include text-single();
           }
         }
       }

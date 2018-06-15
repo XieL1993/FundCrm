@@ -17,7 +17,8 @@ import {
   Swipe,
   SwipeItem,
   Stepper,
-  SubmitBar
+  SubmitBar,
+  Uploader
 } from 'vant'
 
 Vue.use(Button).use(Tab).use(Tabs).use(PullRefresh).use(NoticeBar)
@@ -31,4 +32,4 @@ Vue.use(Lazyload, {
   error: require('../image/default_image.png')
 })
 
-Vue.use(Stepper).use(SubmitBar)
+Vue.use(Stepper).use(SubmitBar).use(Uploader)

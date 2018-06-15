@@ -278,7 +278,7 @@
                 .text {
                   color: $color-main;
                   font-size: 17px;
-                  @include no-wrap;
+                  @include text-single();
                 }
                 .icon {
                   flex: 0 0 auto;
@@ -297,7 +297,7 @@
                 margin-top: 6px;
                 font-size: 13px;
                 color: $color-info;
-                @include no-wrap;
+                @include text-single();
               }
             }
             .right {

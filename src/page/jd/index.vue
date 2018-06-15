@@ -4,6 +4,7 @@
       <svg-icon icon-class="back" class="back" @click.native="back"></svg-icon>
       <h2 class="title">京东商城</h2>
       <svg-icon icon-class="cart" class="cart" @click.native="cart"></svg-icon>
+      <svg-icon icon-class="add" class="add" @click.native="addProduct"></svg-icon>
     </div>
     <van-tabs v-model="active" swipeable>
       <van-tab :title="item.cname" v-for="(item,index) in categoryList" :key="index">
@@ -40,6 +41,9 @@
       },
       cart() {
         this.$router.push('/jd/cart')
+      },
+      addProduct() {
+        this.$router.push('/jd/addProduct')
       }
     },
     components: {
@@ -72,6 +76,7 @@
       color: #ffffff;
       .back {
         font-size: 22px;
+        margin-right: 35px;
       }
       h2 {
         flex: 1 1 auto;
@@ -81,6 +86,10 @@
       }
       .cart {
         font-size: 22px;
+      }
+      .add {
+        font-size: 20px;
+        margin-left: 15px;
       }
     }
     .van-tabs {

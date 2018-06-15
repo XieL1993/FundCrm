@@ -84,3 +84,19 @@ export function getOrderDetail(oid) {
     params: { oid }
   })
 }
+
+export function pay(oid, telephone, name, address) {
+  return fetch({
+    method: 'post',
+    url: '/order/pay',
+    data: { oid, telephone, name, address }
+  })
+}
+
+export function deleteOrder(oid) {
+  return fetch({
+    method: 'post',
+    url: '/order/delete',
+    data: { oid }
+  })
+}

@@ -274,7 +274,7 @@
             font-size: 14px;
             margin-left: 6px;
             color: $color-main;
-            @include no-wrap;
+            @include text-single();
           }
         }
       }
@@ -294,13 +294,13 @@
             .value {
               color: $bg-red;
               font-size: 23px;
-              @include no-wrap;
+              @include text-single();
             }
             .desc {
               margin-top: 6px;
               font-size: 13px;
               color: $color-info;
-              @include no-wrap;
+              @include text-single();
             }
           }
           .divide {
@@ -318,13 +318,13 @@
               color: $color-main;
               font-size: 17px;
               padding: 3px 0;
-              @include no-wrap;
+              @include text-single();
             }
             .desc {
               margin-top: 6px;
               font-size: 13px;
               color: $color-info;
-              @include no-wrap;
+              @include text-single();
             }
           }
         }
@@ -370,13 +370,13 @@
               color: $color-main;
               font-size: 17px;
               padding: 3px 0;
-              @include no-wrap;
+              @include text-single();
             }
             .info {
               margin-top: 6px;
               font-size: 13px;
               color: $color-info;
-              @include no-wrap;
+              @include text-single();
             }
           }
         }

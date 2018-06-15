@@ -5,6 +5,10 @@
         <svg-icon icon-class="back" class="back" @click.native="back"></svg-icon>
         <h2 class="title">付款</h2>
       </div>
+      <van-notice-bar :scrollable="false">
+        <svg-icon icon-class="horn"></svg-icon>
+        暂不做真实支付，直接将收货信息传给后台接口即可。
+      </van-notice-bar>
       <div class="main">
         <div class="order-item">
           <div class="order-title">
@@ -27,6 +31,27 @@
             <span class="time">下单日期：{{order.ordertime | formatDateTime}}</span>
           </div>
         </div>
+        <van-cell-group>
+          <van-field
+            v-model="formItems.telephone"
+            label="手机"
+            required
+            type="number"
+            placeholder="请输入手机号码"
+          ></van-field>
+          <van-field
+            v-model="formItems.name"
+            label="收货人"
+            required
+            placeholder="请输入收货人"
+          ></van-field>
+          <van-field
+            v-model="formItems.address"
+            label="地址"
+            required
+            placeholder="请输入地址"
+          ></van-field>
+        </van-cell-group>
       </div>
       <van-submit-bar
         :disabled="!order.list||order.list.length===0"
@@ -39,8 +64,10 @@
   </transition>
 </template>
 <script>
-  import { getOrderDetail } from '../../api/jd'
+  import { getOrderDetail, pay } from '../../api/jd'
   import { baseURL } from '../../common/js/config'
+  import { Toast } from 'vant'
+  import { mapActions } from 'vuex'
 
   export default {
     created() {
@@ -53,17 +80,44 @@
     },
     data() {
       return {
-        order: {}
+        order: {},
+        formItems: {
+          address: '',
+          name: '',
+          telephone: ''
+        }
       }
     },
     methods: {
+      ...mapActions(['refreshOrderList']),
       fetchData() {
         getOrderDetail(this.oid).then(res => {
           this.order = res.data
         })
       },
       onSubmit() {
-
+        if (!this.formItems.telephone) {
+          Toast({ message: '手机不能为空', position: 'bottom' })
+          return
+        }
+        if (!this.formItems.name) {
+          Toast({ message: '收货人不能为空', position: 'bottom' })
+          return
+        }
+        if (!this.formItems.address) {
+          Toast({ message: '地址不能为空', position: 'bottom' })
+          return
+        }
+        Toast.loading('提交中...')
+        pay(this.oid, this.formItems.telephone, this.formItems.name, this.formItems.address).then(res => {
+          Toast.clear()
+          Toast({ message: res.msg, position: 'bottom' })
+          this.refreshOrderList(true)
+          this.back()
+        }).catch(error => {
+          Toast.clear()
+          Toast({ message: error.message, position: 'bottom' })
+        })
       },
       getUrl(url) {
         return `${baseURL}/image?image=${url}`
@@ -165,7 +219,7 @@
               font-size: 16px;
               font-weight: bold;
               line-height: 20px;
-              @include line(2);
+              @include text-ellipsis(2);
             }
             .price {
               color: $color-main;
@@ -219,6 +273,9 @@
             color: $color-main;
           }
         }
+      }
+      .van-cell-group {
+        margin-bottom: 10px;
       }
     }
   }

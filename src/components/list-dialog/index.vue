@@ -58,7 +58,7 @@
         font-size: 13px;
         color: $color-info;
         user-select: none;
-        @include no-wrap();
+        @include text-single();
       }
       .list-item {
         height: 40px;
@@ -67,7 +67,7 @@
         user-select: none;
         font-size: 15px;
         color: $color-main;
-        @include no-wrap();
+        @include text-single();
         &:active {
           background: $color-active;
         }

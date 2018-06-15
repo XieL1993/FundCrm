@@ -61,7 +61,7 @@
         })
       },
       detail(pid) {
-        this.$router.push(`/jd/${pid}`)
+        this.$router.push(`/jd/detail/${pid}`)
       },
       getStyle() {
         return {

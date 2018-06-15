@@ -138,6 +138,15 @@ export default new Router({
               }
             }
           ]
+        },
+        {
+          name: '新增产品',
+          path: 'addProduct',
+          component: resolve => {
+            import('../page/jd/add-product.vue').then(module => {
+              resolve(module)
+            })
+          }
         }
       ]
     }

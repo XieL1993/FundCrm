@@ -34,8 +34,9 @@
               </div>
               <div class="operate-box">
                 <span class="time">下单日期：{{order.ordertime | formatDateTime}}</span>
-                <van-button size="small" type="primary">删除订单</van-button>
-                <van-button size="small" type="primary" @click.native="detail(order.oid)">付款</van-button>
+                <van-button size="small" type="primary" @click.native="deleteOrder(order.oid)">删除订单</van-button>
+                <van-button size="small" type="primary" @click.native="detail(order.oid)" v-if="order.state===1">付款
+                </van-button>
               </div>
             </div>
           </div>
@@ -50,11 +51,23 @@
   </transition>
 </template>
 <script>
-  import { getOrderList } from '../../api/jd'
-  import { Toast } from 'vant'
+  import { getOrderList, deleteOrder } from '../../api/jd'
+  import { Toast, Dialog } from 'vant'
   import { baseURL } from '../../common/js/config'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
+    computed: {
+      ...mapGetters(['orderList'])
+    },
+    watch: {
+      orderList(val) {
+        if (val) {
+          this.refreshOrderList(false)
+          this.fetchData(true)
+        }
+      }
+    },
     data() {
       return {
         currentPage: 0,
@@ -65,6 +78,7 @@
       }
     },
     methods: {
+      ...mapActions(['refreshOrderList']),
       fetchData(isRefresh) {
         if (isRefresh) {
           this.currentPage = 1
@@ -87,6 +101,23 @@
       },
       detail(oid) {
         this.$router.push(`/jd/order/detail/${oid}`)
+      },
+      deleteOrder(oid) {
+        Dialog.confirm({
+          title: '警告',
+          message: '是否删除此订单？'
+        }).then(() => {
+          Toast.loading('提交中...')
+          deleteOrder(oid).then(res => {
+            Toast.clear()
+            Toast({ message: res.msg, position: 'bottom' })
+            this.fetchData(true)
+          }).catch(error => {
+            Toast.clear()
+            Toast({ message: error.message, position: 'bottom' })
+          })
+        }).catch(res => {
+        })
       },
       getStyle() {
         return {
@@ -201,7 +232,7 @@
                 font-size: 16px;
                 font-weight: bold;
                 line-height: 20px;
-                @include line(2);
+                @include text-ellipsis(2);
               }
               .price {
                 color: $color-main;
