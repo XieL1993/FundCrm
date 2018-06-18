@@ -11,12 +11,12 @@
           <van-field
             v-model="formItems.pname"
             label="产品名称"
-            type="number"
             required
             placeholder="请输入产品名称"
           ></van-field>
+          <van-cell title="分类" is-link v-model="formItems.cname" @click.native="actionsShow = true"></van-cell>
           <van-field
-            v-model="formItems.markert_price"
+            v-model="formItems.market_price"
             type="number"
             label="市场价"
             required
@@ -25,8 +25,15 @@
           <van-field
             v-model="formItems.shop_price"
             type="number"
-            label="商城价"
-            placeholder="请输入商城价"
+            label="优惠价"
+            required
+            placeholder="请输入优惠价"
+          ></van-field>
+          <van-field
+            v-model="formItems.pdesc"
+            label="备注"
+            required
+            placeholder="请输入产品备注"
           ></van-field>
         </van-cell-group>
         <div class="img-list" ref="imgList">
@@ -39,11 +46,13 @@
           </div>
         </div>
       </div>
+      <van-actionsheet v-model="actionsShow" :actions="actions"></van-actionsheet>
     </div>
   </transition>
 </template>
 <script>
-  import { Toast } from 'vant'
+  import { Toast, Dialog } from 'vant'
+  import { addProduct, getCategory } from '../../api/jd'
 
   export default {
     data() {
@@ -51,17 +60,82 @@
         files: [],
         formItems: {
           pname: '',
-          markert_price: '',
-          shop_price: ''
+          cid: '',
+          cname: '',
+          market_price: '',
+          shop_price: '',
+          pdesc: ''
         },
-        imgSize: 0
+        imgSize: 0,
+        actionsShow: false,
+        actions: []
       }
+    },
+    created() {
+      getCategory().then(res => {
+        const list = res.data
+        list.splice(0, 1)
+        list.forEach(item => {
+          this.actions.push({
+            name: item.cname,
+            key: item.cid,
+            callback: this.setCid
+          })
+        })
+        this.formItems.cid = list[0].cid
+        this.formItems.cname = list[0].cname
+      })
     },
     mounted() {
       this.imgSize = (this.$refs.imgList.clientWidth - 10) / 3
     },
     methods: {
       fetchData() {
+        if (!this.formItems.pname) {
+          Toast({ message: '请输入产品名称', position: 'bottom' })
+          return
+        }
+        if (!this.formItems.cid) {
+          Toast({ message: '请选择产品分类', position: 'bottom' })
+          return
+        }
+        if (!this.formItems.market_price) {
+          Toast({ message: '请输入产品市场价', position: 'bottom' })
+          return
+        }
+        if (!this.formItems.shop_price) {
+          Toast({ message: '请输入产品优惠价', position: 'bottom' })
+          return
+        }
+        if (this.files.length === 0) {
+          Toast({ message: '请上传产品封面', position: 'bottom' })
+          return
+        }
+        Toast.loading('提交中...')
+        const param = new FormData()
+        param.append('file', this.files[0].file)
+        param.append('pname', this.formItems.pname)
+        param.append('cid', this.formItems.cid)
+        param.append('market_price', this.formItems.market_price)
+        param.append('shop_price', this.formItems.shop_price)
+        param.append('pdesc', this.formItems.pdesc)
+        addProduct(param).then(res => {
+          Toast.clear()
+          Dialog.alert({
+            title: '提示',
+            message: res.msg
+          }).then(() => {
+            this.back()
+          })
+        }).catch(error => {
+          Toast.clear()
+          Toast({ message: error.message, position: 'bottom' })
+        })
+      },
+      setCid(item) {
+        this.formItems.cid = item.key
+        this.formItems.cname = item.name
+        this.actionsShow = false
       },
       getPikerStyle() {
         return {
@@ -90,7 +164,6 @@
       },
       onRead(file) {
         this.files.push(file)
-        console.log(file)
         Toast.clear()
       }
     }

@@ -100,3 +100,16 @@ export function deleteOrder(oid) {
     data: { oid }
   })
 }
+
+export function addProduct(data) {
+  return fetch.post('/attach/add', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    transformRequest: [
+      function(data) {
+        return data
+      }
+    ]
+  })
+}

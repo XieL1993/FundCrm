@@ -61,7 +61,7 @@
             title: '提示',
             message: res.msg
           }).then(() => {
-            this.$router.replace('/jd/cart')
+            this.back()
           })
         }).catch(error => {
           Toast.clear()
@@ -81,6 +81,9 @@
       },
       getUrl(url) {
         return `${baseURL}/image?image=${url}`
+      },
+      back() {
+        this.$router.back()
       }
     }
   }

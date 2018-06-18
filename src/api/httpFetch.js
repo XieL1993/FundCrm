@@ -7,8 +7,7 @@ import { baseURL } from '../common/js/config'
 
 const httpFetch = axios.create({
   baseURL,
-  timeout: 15000, // request timeout
-  // 请求头信息
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   },
@@ -17,10 +16,7 @@ const httpFetch = axios.create({
       data = Qs.stringify(data)
       return data
     }
-  ],
-  params: {},
-  // post参数，使用axios.post(url,{},config);如果没有额外的也必须要用一个空对象，否则会报错
-  data: {}
+  ]
 })
 
 httpFetch.interceptors.request.use(config => {
@@ -34,7 +30,6 @@ httpFetch.interceptors.request.use(config => {
   return Promise.reject(error)
 })
 httpFetch.interceptors.response.use(response => {
-  // axios处理ie返回时为String类型
   if (response.data && typeof response.data === 'string') {
     response.data = JSON.parse(response.data)
   }
